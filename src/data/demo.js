@@ -1,0 +1,13 @@
+export const demoCompanies=[
+{id:'demo-1',name:'TechNova',category:'Dream',reported_min_cgpa:7.5,reported_max_cgpa:null,description:'Demo technology company profile used to demonstrate the strategist.',created_at:'2026-08-18'},
+{id:'demo-2',name:'DataSphere',category:'Super Dream',reported_min_cgpa:8.2,reported_max_cgpa:null,description:'Demo data and analytics company profile.',created_at:'2026-08-24'},
+{id:'demo-3',name:'CloudCore',category:'Dream',reported_min_cgpa:7.8,reported_max_cgpa:null,description:'Demo cloud engineering company profile.',created_at:'2026-08-28'},
+{id:'demo-4',name:'FinEdge',category:'Core',reported_min_cgpa:7.0,reported_max_cgpa:null,description:'Demo fintech company profile.',created_at:'2026-08-30'},
+{id:'demo-5',name:'CodeCraft',category:'Super Dream',reported_min_cgpa:8.5,reported_max_cgpa:null,description:'Demo software engineering company profile.',created_at:'2026-09-02'}]
+export const demoReports=[
+{id:'r1',company_id:'demo-1',role:'Software Engineer',graduation_year:2027,reported_cgpa:8.1,coding_difficulty:'Medium',interview_rounds:'Technical + HR',questions:'Arrays, strings, OOP, project discussion',reported_min_cgpa:7.5,outcome:'Selected',notes:'Demo/sample report — not actual SRM placement data.',created_at:'2026-08-18'},
+{id:'r2',company_id:'demo-1',role:'Developer',graduation_year:2027,reported_cgpa:7.7,coding_difficulty:'Hard',interview_rounds:'OA + Technical',questions:'DSA, SQL, debugging',reported_min_cgpa:7.5,outcome:'Rejected',notes:'Demo/sample report.',created_at:'2026-08-26'},
+{id:'r3',company_id:'demo-2',role:'Data Engineer',graduation_year:2027,reported_cgpa:8.6,coding_difficulty:'Hard',interview_rounds:'OA + 2 Technical + HR',questions:'SQL, DSA, DBMS, Python',reported_min_cgpa:8.2,outcome:'Selected',notes:'Demo/sample report.',created_at:'2026-08-24'},
+{id:'r4',company_id:'demo-3',role:'Cloud Engineer',graduation_year:2027,reported_cgpa:8.0,coding_difficulty:'Medium',interview_rounds:'Technical + Managerial',questions:'Networking, Linux, OOP',reported_min_cgpa:7.8,outcome:'Selected',notes:'Demo/sample report.',created_at:'2026-08-28'},
+{id:'r5',company_id:'demo-4',role:'Analyst',graduation_year:2027,reported_cgpa:7.2,coding_difficulty:'Easy',interview_rounds:'Aptitude + HR',questions:'Aptitude, SQL basics, communication',reported_min_cgpa:7.0,outcome:'Waitlisted',notes:'Demo/sample report.',created_at:'2026-08-30'},
+{id:'r6',company_id:'demo-5',role:'Software Engineer',graduation_year:2027,reported_cgpa:8.8,coding_difficulty:'Hard',interview_rounds:'OA + 2 Technical + HR',questions:'Graphs, DP, OOP, DBMS, project deep dive',reported_min_cgpa:8.5,outcome:'Selected',notes:'Demo/sample report.',created_at:'2026-09-02'}]
