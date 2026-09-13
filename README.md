@@ -1,4 +1,4 @@
-# SRM Placement Strategist
+# SRM Placement Strategistgit remote add origin https://github.com/YOUR-USERNAME/cutoffx.git
 
 **Turn placement uncertainty into a strategy.**
 
