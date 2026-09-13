@@ -1,13 +1,13 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
 
-import Layout from './components/Layout';
-import Dashboard from './pages/Dashboard';
-import Companies from './pages/Companies';
-import CompanyDetail from './pages/CompanyDetail';
-import ReportDetail from './pages/ReportDetail';
-import Strategist from './pages/Strategist';
-import Submit from './pages/Submit';
+import Layout from "./components/Layout";
+import Dashboard from "./pages/Dashboard";
+import Companies from "./pages/Companies";
+import CompanyDetail from "./pages/CompanyDetail";
+import ReportDetail from "./pages/ReportDetail";
+import Strategist from "./pages/Strategist";
+import Submit from "./pages/Submit";
 
 export default function App() {
   return (
@@ -15,10 +15,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
 
-        <Route
-          path="/companies"
-          element={<Companies />}
-        />
+        <Route path="/companies" element={<Companies />} />
 
         <Route
           path="/companies/:id"
@@ -40,10 +37,7 @@ export default function App() {
           element={<Submit />}
         />
 
-        <Route
-          path="*"
-          element={<Dashboard />}
-        />
+        <Route path="*" element={<Dashboard />} />
       </Routes>
     </Layout>
   );

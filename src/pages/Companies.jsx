@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Search,
   Building2,
@@ -7,87 +7,73 @@ import {
   CalendarDays,
   FileText,
   SlidersHorizontal,
-} from 'lucide-react';
+} from "lucide-react";
 
-const companies = [
-  {
-    id: 1,
-    name: 'TechNova',
-    category: 'Dream',
-    minCgpa: 7.5,
-    reports: 12,
-    latest: '2026-09-05',
-    description:
-      'Technology company with software engineering and product development opportunities.',
-  },
-  {
-    id: 2,
-    name: 'DataSphere',
-    category: 'Super Dream',
-    minCgpa: 8.0,
-    reports: 8,
-    latest: '2026-09-02',
-    description:
-      'Data and analytics focused company with technical roles.',
-  },
-  {
-    id: 3,
-    name: 'CloudCore',
-    category: 'Dream',
-    minCgpa: 7.2,
-    reports: 7,
-    latest: '2026-08-28',
-    description:
-      'Cloud and software engineering focused organization.',
-  },
-  {
-    id: 4,
-    name: 'FinEdge',
-    category: 'Core',
-    minCgpa: 6.8,
-    reports: 5,
-    latest: '2026-08-20',
-    description:
-      'Finance technology company with software and technology roles.',
-  },
-  {
-    id: 5,
-    name: 'CodeCraft',
-    category: 'Super Dream',
-    minCgpa: 8.2,
-    reports: 10,
-    latest: '2026-09-07',
-    description:
-      'Software engineering company with competitive technical interviews.',
-  },
-];
+import { getCompanies, getReports } from "../lib/api";
 
-const categories = ['All', 'Core', 'Dream', 'Super Dream'];
+const categories = ["All", "Core", "Dream", "Super Dream"];
 
 export default function Companies() {
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('All');
-  const [sort, setSort] = useState('name');
+  const [companies, setCompanies] = useState([]);
+  const [reports, setReports] = useState([]);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+  const [sort, setSort] = useState("name");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      const [companiesResult, reportsResult] = await Promise.all([
+        getCompanies(),
+        getReports(),
+      ]);
+
+      setCompanies(companiesResult.data || []);
+      setReports(reportsResult.data || []);
+      setLoading(false);
+    }
+
+    loadData();
+  }, []);
+
+  const companyData = useMemo(() => {
+    return companies.map((company) => {
+      const companyReports = reports.filter(
+        (report) => report.company_id === company.id
+      );
+
+      const latestReport = companyReports
+        .map((report) => report.created_at)
+        .sort()
+        .reverse()[0];
+
+      return {
+        ...company,
+        minCgpa: company.reported_min_cgpa,
+        reports: companyReports.length,
+        latest: latestReport || company.created_at,
+      };
+    });
+  }, [companies, reports]);
 
   const filteredCompanies = useMemo(() => {
-    let result = companies.filter((company) => {
+    let result = companyData.filter((company) => {
       const matchesSearch = company.name
         .toLowerCase()
         .includes(search.toLowerCase());
 
       const matchesCategory =
-        category === 'All' ||
-        company.category === category;
+        category === "All" || company.category === category;
 
       return matchesSearch && matchesCategory;
     });
 
     result.sort((a, b) => {
-      if (sort === 'cgpa') {
-        return a.minCgpa - b.minCgpa;
+      if (sort === "cgpa") {
+        return (a.minCgpa || 0) - (b.minCgpa || 0);
       }
 
-      if (sort === 'reports') {
+      if (sort === "reports") {
         return b.reports - a.reports;
       }
 
@@ -95,7 +81,17 @@ export default function Companies() {
     });
 
     return result;
-  }, [search, category, sort]);
+  }, [companyData, search, category, sort]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <section className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
+          <p className="text-slate-400">Loading companies...</p>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -112,21 +108,21 @@ export default function Companies() {
           </h1>
 
           <p className="mt-4 text-slate-400">
-            Compare companies using community-reported eligibility
-            patterns and student placement experiences.
+            Compare companies using community-reported eligibility patterns
+            and student placement experiences.
           </p>
         </div>
 
-        {/* Demo data notice */}
+        {/* Data notice */}
         <div className="mt-8 rounded-2xl border border-amber-500/10 bg-amber-500/5 p-4">
           <p className="text-sm font-medium text-amber-300">
-            Demo data
+            Community data
           </p>
 
           <p className="mt-1 text-xs leading-5 text-slate-500">
-            The companies and placement ranges currently shown are
-            fictional demo data for this independent student project.
-            They are not official SRM placement records.
+            The placement ranges and experiences shown here are
+            student-reported community data. They are not official SRM
+            placement records and should be used for guidance only.
           </p>
         </div>
 
@@ -171,8 +167,8 @@ export default function Companies() {
                 onClick={() => setCategory(item)}
                 className={`shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition ${
                   category === item
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+                    ? "bg-blue-600 text-white"
+                    : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 {item}
@@ -182,16 +178,14 @@ export default function Companies() {
         </div>
 
         {/* Results count */}
-        <div className="mt-8 flex items-center justify-between">
-          <div>
-            <p className="text-sm text-slate-400">
-              Showing{' '}
-              <span className="font-semibold text-white">
-                {filteredCompanies.length}
-              </span>{' '}
-              companies
-            </p>
-          </div>
+        <div className="mt-8">
+          <p className="text-sm text-slate-400">
+            Showing{" "}
+            <span className="font-semibold text-white">
+              {filteredCompanies.length}
+            </span>{" "}
+            companies
+          </p>
         </div>
 
         {/* Empty state */}
@@ -210,8 +204,8 @@ export default function Companies() {
             <button
               type="button"
               onClick={() => {
-                setSearch('');
-                setCategory('All');
+                setSearch("");
+                setCategory("All");
               }}
               className="mt-5 rounded-lg bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/15"
             >
@@ -223,10 +217,7 @@ export default function Companies() {
         {/* Company cards */}
         <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {filteredCompanies.map((company) => (
-            <CompanyCard
-              key={company.id}
-              company={company}
-            />
+            <CompanyCard key={company.id} company={company} />
           ))}
         </div>
 
@@ -237,10 +228,10 @@ export default function Companies() {
           </p>
 
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            Reported CGPA ranges and experiences are community data and
-            may be incomplete or inaccurate. They are provided for
-            guidance only and should not be treated as official
-            university or company eligibility criteria.
+            Reported CGPA ranges and experiences are community data and may be
+            incomplete or inaccurate. They are provided for guidance only and
+            should not be treated as official university or company
+            eligibility criteria.
           </p>
         </div>
       </section>
@@ -279,7 +270,7 @@ function CompanyCard({ company }) {
         </p>
 
         <p className="mt-1 text-2xl font-bold text-white">
-          {company.minCgpa}+
+          {company.minCgpa ? `${company.minCgpa}+` : "Not reported"}
         </p>
 
         <p className="mt-1 text-xs text-slate-600">
@@ -330,9 +321,11 @@ function CompanyCard({ company }) {
 }
 
 function formatDate(date) {
-  return new Date(date).toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
+  if (!date) return "No reports";
+
+  return new Date(date).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   });
 }
